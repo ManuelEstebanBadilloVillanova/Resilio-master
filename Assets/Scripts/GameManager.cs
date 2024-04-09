@@ -2,11 +2,14 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Transform tilePrefab;
     [SerializeField] private Transform gameHolder;
+    public int powerFlagCount;
+    public int powerShildCount;
 
     private List<Tile> tiles = new List<Tile>();
 
@@ -148,6 +151,7 @@ public class GameManager : MonoBehaviour
         {
             RestartGame();
         }
+
     }
 
     public void RestartGame()
@@ -209,5 +213,7 @@ public class GameManager : MonoBehaviour
             ClickNeighbours(tile);
         }
     }
+
+    
 
 }

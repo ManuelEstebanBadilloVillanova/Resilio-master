@@ -19,15 +19,25 @@ public class Tile : MonoBehaviour
 
 
     private SpriteRenderer spriteRenderer;
+    private GameObject powerUpsManager;
+    private PowerUps powerUps;
     public bool flagged = false;
     public bool active = true;
     public bool isMine = false;
+    public bool flagActive = false;
     public int mineCount = 0;
 
 
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        powerUpsManager = GameObject.Find("PowerUps");
+        powerUps = powerUpsManager.GetComponent<PowerUps>();
+    }
+
+    private void Update()
+    {
+        PowerUpsManager();
     }
 
     private void OnMouseOver()
@@ -111,5 +121,43 @@ public class Tile : MonoBehaviour
             spriteRenderer.sprite = flaggedTile;
         }
     }
+
+    public void PowerUpsManager()
+    {
+        if (isMine == true)
+        {
+            if (powerUps.isShieldPAct == true)
+            {
+                flagged = true;
+                flagActive = true;
+
+            }
+            else if (powerUps.isShieldPAct == false)
+            {
+                flagged = false;
+                flagActive = false;
+            }
+        }
+
+
+        if (isMine == true)
+        {
+            if (powerUps.isFlagPAct == true)
+            {
+                flagged = true;
+                flagActive = true;
+                SetFlaggedIfMine();
+            }
+            else if (powerUps.isFlagPAct == true)
+            {
+                flagged = false;
+                flagActive = false;
+                spriteRenderer.sprite = unclickedTile;
+                
+            }
+        }
+    }
+
+
 
 }
