@@ -37,7 +37,8 @@ public class Tile : MonoBehaviour
 
     private void Update()
     {
-        PowerUpsManager();
+        //llamada a la funcion del powerup de la bandera
+        PowerUpFlag();
     }
 
     private void OnMouseOver()
@@ -47,7 +48,11 @@ public class Tile : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                ClickedTile();
+                //llamada a la funcion del power up del escudo
+                //se llama primero a la funcion del escudo con el fin de que se compruebe si este esta activo
+                //y si el tile es una mina
+                PowerUpShield();
+                ClickedTile();   
             }
             else if (Input.GetMouseButtonDown(1))
             {
@@ -122,38 +127,56 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void PowerUpsManager()
+
+    //funciones que se encargan de intervenir los tiles y ejecutar la logica de las minas
+    //se hacen por separado ya que una necesita hubicarse necesariamente en el update y la otra
+    // necesita llamarse antes de cambiar el estado del tile al hacer click
+    //en caso de querer hacer modificaciones a los tiles, relacionadas a los power ups, se recomienda
+    //hacerlo en las siguientes funciones
+
+    public void PowerUpFlag()
     {
+        //se comprueba si el tile es una mina y si el power up de la bandera esta activado
         if (isMine == true)
         {
-            if (powerUps.isShieldPAct == true)
-            {
-                flagged = true;
-                flagActive = true;
-
-            }
-            else if (powerUps.isShieldPAct == false)
-            {
-                flagged = false;
-                flagActive = false;
-            }
-        }
-
-
-        if (isMine == true)
-        {
+            //en caso de ser asi, se cambia el estado del tile 
             if (powerUps.isFlagPAct == true)
             {
                 flagged = true;
                 flagActive = true;
                 SetFlaggedIfMine();
             }
-            else if (powerUps.isFlagPAct == true)
+            
+        }
+        //en caso de no ser una mina y ya que se a activado el power up, se pocede a ejecutar el click en la casilla
+        if (isMine == false)
+        {
+            if (powerUps.isFlagPAct)
+            {
+                ClickedTile();
+            }
+        }
+    }
+
+    //funcion que se encarga de la logica del power up del escudo
+    public void PowerUpShield()
+    {
+        //se comprueba si es una mina
+        if (isMine == true)
+        {
+            //se verifica si el power up esta activado y dado que su funcion se ejecuta
+            //cada que se hace click, se le resta un punto al numero de usos que tiene el power up
+            if (powerUps.isShieldPAct == true)
+            {
+                flagged = true;
+                flagActive = true;
+                powerUps.countShieldP -= 1;
+            }
+            //se comprueba si el power up fue desactivado para asi cambiar el estado de los tiles
+            else if (powerUps.isShieldPAct == false)
             {
                 flagged = false;
                 flagActive = false;
-                spriteRenderer.sprite = unclickedTile;
-                
             }
         }
     }
